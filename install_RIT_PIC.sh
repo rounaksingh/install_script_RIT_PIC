@@ -1,7 +1,6 @@
 #! /usr/bin/env bash
 #
 # Install Klayout & SiEPCI
-# For Linux
 # Written by Rounak Singh Narde <rn5949@rit.edu>
 # MIT License - Public is free to use, distribute and modify
 #
@@ -9,7 +8,7 @@
 # 
 # - script checks for klayout. If not installed, script installs it from the installation zip file.
 #
-# -Two way installation - offline and online
+# -Two way installation for SiEPIC - offline and online
 # -- offline - installation requires already downloaded zip file. It should be in current directory. 
 # The filename should be provided below. The hierarchy should be the same as downloaded from github. 
 # -- online - script download zip file from github. A released version number should be provided below.
@@ -17,7 +16,6 @@
 # Note: Script can also be used to update the SiEPIC package directly from github without changing klayout.
 # 
 #----------------------------------------------------------------------------------------------------------------------
-
 
 # Klayout file
 KLAYOUT_INSTALL_FILE="klayout_RITLinux.zip"
@@ -75,12 +73,11 @@ install_klayout()
         unzip -oq $KLAYOUT_INSTALL_FILE
         echo "Installation complete"
         config_bash_profile_klayout
-	source ~/.bash_profile
-	klayout -zz
+    	source ~/.bash_profile
+    	klayout -zz
     else
         echo "Klayout Installation file not found in home directory."
         echo "Bye bye"
-        exit 3
     fi       
 }
 
@@ -115,7 +112,7 @@ install_SiEPIC()
         if [ $? -ne 0 ]
             then 
                 echo "Unable to Download from github." 
-                exit 1
+                return 1
         fi
         extract_zip_file v$SiEPIC_VERSION.zip
         rm v$SiEPIC_VERSION.zip
@@ -123,7 +120,12 @@ install_SiEPIC()
     
     echo "Installing SiEPIC_EBeam_PDK version: $SiEPIC_VERSION"
     cp -r SiEPIC_EBeam_PDK-$SiEPIC_VERSION/klayout_dot_config/* ~/.klayout/
-    echo "Installation complete"
+    if [ $? -ne 0 ]
+        then 
+            echo "Unable to Install SiEPIC." 
+            return 2
+    fi
+    echo "Installation complete"            
 }
 
 echo_menu_start()
@@ -151,7 +153,7 @@ home_menu() {
 	                5) echo "Happy PICing!"
                         echo "Bye bye"
 						exit ;; 
-	                *) echo "~ unknow choice $REPLY" ;; 
+	                *) echo "~ unknown choice $REPLY" ;; 
 	        esac 
 	done 
 }
