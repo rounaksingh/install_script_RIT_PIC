@@ -29,12 +29,34 @@ SiEPIC_FILE="SiEPIC_EBeam_PDK-0.1.35_RITLinux.zip"
 # -online- Enter SiEPIC version as in github releases
 SiEPIC_VERSION="0.1.35"
 
-#
+# Enter automate below three modules
+# No need to enter following in terminal everytime
+# $ module load lumerical-mode
+# $ module load lumerical-interconnect
+# $ module load lumerical-fdtd
+MODULE_LUMERICAL_MODE="lumerical-mode"
+MODULE_LUMERICAL_INTERCONNECT="lumerical-interconnect"
+MODULE_LUMERICAL_FDTD="lumerical-fdtd"
+
+# shortcuts for lumerical
+# overwrite the siepic
 #----------------------------------------------------------------------------------------------------------------------
 #
-config_bash_profile() 
+
+config_bash_profile_lumerical()
+{
+	echo "Configuring .bash_profile for Lumerical"
+	echo  >> ~/.bash_profile
+    echo "module load lumerical-mode" >> ~/.bash_profile
+    echo "module load lumerical-interconnect" >> ~/.bash_profile
+    echo "module load lumerical-fdtd" >> ~/.bash_profile
+    echo "Done"
+}
+
+config_bash_profile_klayout() 
 {
     echo "Configuring .bash_profile"
+    echo  >> ~/.bash_profile
     echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> ~/.bash_profile
     echo "export PATH" >> ~/.bash_profile
     echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/.bash_profile
@@ -50,7 +72,7 @@ install_klayout()
         echo "Installing Klayout"
         unzip -oq $KLAYOUT_INSTALL_FILE
         echo "Installation complete"
-        config_bash_profile
+        config_bash_profile_klayout
 	source ~/.bash_profile
 	klayout -zz
     else
@@ -102,13 +124,21 @@ install_SiEPIC()
     echo "Installation complete"
 }
 
+home_menu() {
+	
+	echo_menu_start;
+	select choix in "Config bash_profile - Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "Exit"
+	do 
+			
+	        case $REPLY in 
+	                1) config_bash_profile_lumerical ;; 
+	                2) check_klayout_exist ;; 
+	                3) install_SiEPIC ;; 
+	                4) echo "Happy PIC!"
+						exit ;; 
+	                *) echo "~ unknow choice $REPLY" ;; 
+	        esac 
+	done 
+}
 
-echo
-check_klayout_exist
-#install_klayout
-echo
-install_SiEPIC
-echo
-echo "Happy PIC!"
-echo
-exit 0
+home_menu
