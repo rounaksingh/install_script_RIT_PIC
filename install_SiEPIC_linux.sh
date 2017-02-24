@@ -31,6 +31,7 @@ SiEPIC_VERSION="0.1.35"
 
 # Enter automate below three modules
 # No need to enter following in terminal everytime
+# Please change them as your computer admin has named them
 # $ module load lumerical-mode
 # $ module load lumerical-interconnect
 # $ module load lumerical-fdtd
@@ -50,6 +51,7 @@ config_bash_profile_lumerical()
     echo "module load lumerical-mode" >> ~/.bash_profile
     echo "module load lumerical-interconnect" >> ~/.bash_profile
     echo "module load lumerical-fdtd" >> ~/.bash_profile
+    source ~/.bash_profile
     echo "Done"
 }
 
@@ -123,25 +125,30 @@ install_SiEPIC()
     cp -r SiEPIC_EBeam_PDK-$SiEPIC_VERSION/klayout_dot_config/* ~/.klayout/
     echo "Installation complete"
 }
+
 echo_menu_start()
 {
     echo "Hi, Welcome to installation script for softwares required for RIT PIC course."
-    echo "Written by Rounak Singh <rounaksingh17@gmail.com>"
+    echo "Written by Rounak Singh <rounaksingh17@gmail.com> <rn5949@rit.edu>"
     echo "Website: https://github.com/rounaksingh/install_script_RIT_PIC"
     echo "Ready to install softwares?"
     echo "Select one below by typing the number."
 }
+
 home_menu() {
 	
 	echo_menu_start;
-	select choix in "Config bash_profile - Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "Exit"
+	select choix in "Config bash_profile - Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "All" "Exit"
 	do 
 			
 	        case $REPLY in 
 	                1) config_bash_profile_lumerical ;; 
 	                2) check_klayout_exist ;; 
-	                3) install_SiEPIC ;; 
-	                4) echo "Happy PICing!"
+	                3) install_SiEPIC ;;
+                    4) config_bash_profile_lumerical
+                        check_klayout_exist
+                        install_SiEPIC ;;
+	                5) echo "Happy PICing!"
                         echo "Bye bye"
 						exit ;; 
 	                *) echo "~ unknow choice $REPLY" ;; 
