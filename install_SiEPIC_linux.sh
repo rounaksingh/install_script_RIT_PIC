@@ -123,7 +123,14 @@ install_SiEPIC()
     cp -r SiEPIC_EBeam_PDK-$SiEPIC_VERSION/klayout_dot_config/* ~/.klayout/
     echo "Installation complete"
 }
-
+echo_menu_start()
+{
+    echo "Hi, Welcome to installation script for softwares required for RIT PIC course."
+    echo "Written by Rounak Singh <rounaksingh17@gmail.com>"
+    echo "Website: https://github.com/rounaksingh/install_script_RIT_PIC"
+    echo "Ready to install softwares?"
+    echo "Select one below by typing the number."
+}
 home_menu() {
 	
 	echo_menu_start;
@@ -134,7 +141,8 @@ home_menu() {
 	                1) config_bash_profile_lumerical ;; 
 	                2) check_klayout_exist ;; 
 	                3) install_SiEPIC ;; 
-	                4) echo "Happy PIC!"
+	                4) echo "Happy PICing!"
+                        echo "Bye bye"
 						exit ;; 
 	                *) echo "~ unknow choice $REPLY" ;; 
 	        esac 
