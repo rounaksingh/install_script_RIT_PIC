@@ -18,22 +18,21 @@ May work in Windows 10, because of new bash integration. Not tested
 
 1) Copy the script in your home directory. Also, copy required Klayout installation zip file & SiEPIC installation zip file in home. It is not mandatory to install them in home. However, the script is written mainly for people who do not have superuser access.
 
-2) Script may not be executable. Please run
+2) Script may not be executable. Please cd to home directory and run
 
 ```bash
-$ chmod u+x install_SiEPIC_linux.sh
+$ cd ~
+$ chmod u+x install_RIT_PIC.sh
 ```
 
 3) To run script. Do (in linux)
 
 ```bash
-$ ./install_SiEPIC_linux.sh
+$ ./install_RIT_PIC.sh
 ```
 
 4) The script will ask what you want to do.
 
 ## Additional feature
-
-* 
 
 * If no SiEPIC installation zip file found by script in its current directory. The script also provide automatic SiEPIC download form github with specific version. Please enter the version in script file. This feature may be helpful when updating SiEPIC from github.
