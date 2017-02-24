@@ -27,6 +27,8 @@ SiEPIC_FILE="SiEPIC_EBeam_PDK-0.1.35_RITLinux.zip"
 # -online- Enter SiEPIC version as in github releases
 SiEPIC_VERSION="0.1.35"
 
+# .bashrc or .bash_profile
+BASH_USER_ENV=.bashrc
 # Enter automate below three modules
 # No need to enter following in terminal everytime
 # Please change them as your computer admin has named them
@@ -44,23 +46,24 @@ MODULE_LUMERICAL_FDTD="lumerical-fdtd"
 
 config_bash_profile_lumerical()
 {
-	echo "Configuring .bash_profile for Lumerical"
-	echo  >> ~/.bash_profile
-    echo "module load lumerical-mode" >> ~/.bash_profile
-    echo "module load lumerical-interconnect" >> ~/.bash_profile
-    echo "module load lumerical-fdtd" >> ~/.bash_profile
-    source ~/.bash_profile
+	echo "Configuring user environment for Lumerical"
+	echo  >> ~/$BASH_USER_ENV
+    echo "module load lumerical-mode" >> ~/$BASH_USER_ENV
+    echo "module load lumerical-interconnect" >> ~/$BASH_USER_ENV
+    echo "module load lumerical-fdtd" >> ~/$BASH_USER_ENV
+    source ~/$BASH_USER_ENV
     echo "Done"
 }
 
 config_bash_profile_klayout() 
 {
-    echo "Configuring .bash_profile"
-    echo  >> ~/.bash_profile
-    echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> ~/.bash_profile
-    echo "export PATH" >> ~/.bash_profile
-    echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/.bash_profile
-    echo "export LD_LIBRARY_PATH" >> ~/.bash_profile
+    echo "Configuring user environment"
+    echo  >> ~/$BASH_USER_ENV
+    echo "PATH=\$PATH:\$HOME/bin:\$HOME/klayout/usr/bin" >> ~/$BASH_USER_ENV
+    echo "export PATH" >> ~/$BASH_USER_ENV
+    echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/$BASH_USER_ENV
+    echo "export LD_LIBRARY_PATH" >> ~/$BASH_USER_ENV
+    source ~/$BASH_USER_ENV
     echo "Configured"
 }
 
@@ -73,7 +76,6 @@ install_klayout()
         unzip -oq $KLAYOUT_INSTALL_FILE
         echo "Installation complete"
         config_bash_profile_klayout
-    	source ~/.bash_profile
     	klayout -zz
     else
         echo "Klayout Installation file not found in home directory."
@@ -140,7 +142,7 @@ echo_menu_start()
 home_menu() {
 	
 	echo_menu_start;
-	select choix in "Config bash_profile - Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "All" "Exit"
+	select choix in "Config user environment - Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "All" "Exit"
 	do 
 			
 	        case $REPLY in 
