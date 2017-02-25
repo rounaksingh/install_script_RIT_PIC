@@ -33,6 +33,11 @@ $ ./install_RIT_PIC.sh
 
 4) The script will ask what you want to do.
 
+5) After exiting, please restart the terminal or do
+```bash
+$ source ~/.bashrc
+```
+
 ## Additional feature
 
 * If no SiEPIC installation zip file found by script in its current directory. The script also provide automatic SiEPIC download form github with specific version. Please enter the version in script file. This feature may be helpful when updating SiEPIC from github.

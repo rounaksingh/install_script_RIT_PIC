@@ -47,19 +47,15 @@ MODULE_LUMERICAL_FDTD="lumerical-fdtd"
 config_bash_profile_lumerical()
 {
 	echo "Configuring user environment for Lumerical"
-	echo  >> ~/$BASH_USER_ENV
-    echo "module load lumerical-mode" >> ~/$BASH_USER_ENV
-    echo "module load lumerical-interconnect" >> ~/$BASH_USER_ENV
-    echo "module load lumerical-fdtd" >> ~/$BASH_USER_ENV
-    source ~/$BASH_USER_ENV
+    echo "Doing nothing"
+    echo "reserved For future"
     echo "Done"
 }
 
 config_bash_profile_klayout() 
 {
     echo "Configuring user environment"
-    echo  >> ~/$BASH_USER_ENV
-    echo "PATH=\$PATH:\$HOME/bin:\$HOME/klayout/usr/bin" >> ~/$BASH_USER_ENV
+    echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> ~/$BASH_USER_ENV
     echo "export PATH" >> ~/$BASH_USER_ENV
     echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/$BASH_USER_ENV
     echo "export LD_LIBRARY_PATH" >> ~/$BASH_USER_ENV
@@ -149,7 +145,7 @@ home_menu() {
 	                1) config_bash_profile_lumerical ;; 
 	                2) check_klayout_exist ;; 
 	                3) install_SiEPIC ;;
-                    4) config_bash_profile_lumerical
+                    4)  config_bash_profile_lumerical
                         check_klayout_exist
                         install_SiEPIC ;;
 	                5) echo "Happy PICing!"
