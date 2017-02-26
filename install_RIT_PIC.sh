@@ -44,11 +44,30 @@ MODULE_LUMERICAL_FDTD="lumerical-fdtd"
 #----------------------------------------------------------------------------------------------------------------------
 #
 
-config_bash_profile_lumerical()
+# shortcuts are created on desktop
+#create_shortcut
+create_shortcut()
 {
-	echo "Configuring user environment for Lumerical"
-    echo "Doing nothing"
-    echo "reserved For future"
+    SHORTCUT_NAME=$1
+    SHORTCUT_CMD=$2
+    SHORTCUT_ICON=$3
+    echo "#!/usr/bin/env xdg-open">~/Desktop/$SHORTCUT_NAME.desktop
+    echo "[Desktop Entry]">>~/Desktop/$SHORTCUT_NAME.desktop
+    echo "Version=1.0">>~/Desktop/$SHORTCUT_NAME.desktop
+    echo "Type=Application">>~/Desktop/$SHORTCUT_NAME.desktop
+    echo "Terminal=false">>~/Desktop/$SHORTCUT_NAME.desktop
+    echo "Exec=$SHORTCUT_CMD">>~/Desktop/$SHORTCUT_NAME.desktop
+    echo "Name=$SHORTCUT_NAME">>~/Desktop/$SHORTCUT_NAME.desktop
+    echo "Icon=$SHORTCUT_ICON">>~/Desktop/$SHORTCUT_NAME.desktop
+    chmod 744 ~/Desktop/$SHORTCUT_NAME.desktop
+}
+
+create_shortcuts_lumerical()
+{
+	echo "Creating shortcuts for Lumerical"
+    create_shortcut "interconnect" "bash -c 'source ~/.bashrc && module load lumerical-interconnect && interconnect'"
+    create_shortcut "mode-solutions" "bash -c 'source ~/.bashrc && module load lumerical-mode && mode-solutions'"
+    create_shortcut "fdtd" "bash -c 'source ~/.bashrc && module load lumerical-fdtd && fdtd-solutions'"
     echo "Done"
 }
 
@@ -60,6 +79,8 @@ config_bash_profile_klayout()
     echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/$BASH_USER_ENV
     echo "export LD_LIBRARY_PATH" >> ~/$BASH_USER_ENV
     source ~/$BASH_USER_ENV
+    #create_shortcut "klayout" "bash -c 'PATH=\$PATH:\$HOME/klayout/usr/bin && export PATH && LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64 && export LD_LIBRARY_PATH && klayout'" "~/klayout/usr/share/pixmaps/klayout.png"
+    create_shortcut "klayout" "bash -c 'source ~/.bashrc && klayout'" "~/klayout/usr/share/pixmaps/klayout.png"
     echo "Configured"
 }
 
@@ -72,7 +93,7 @@ install_klayout()
         unzip -oq $KLAYOUT_INSTALL_FILE
         echo "Installation complete"
         config_bash_profile_klayout
-    	klayout -zz
+    	#klayout -zz
     else
         echo "Klayout Installation file not found in home directory."
         echo "Bye bye"
@@ -117,6 +138,7 @@ install_SiEPIC()
     fi
     
     echo "Installing SiEPIC_EBeam_PDK version: $SiEPIC_VERSION"
+    mkdir -p ~/.klayout
     cp -r SiEPIC_EBeam_PDK-$SiEPIC_VERSION/klayout_dot_config/* ~/.klayout/
     if [ $? -ne 0 ]
         then 
@@ -138,14 +160,14 @@ echo_menu_start()
 home_menu() {
 	
 	echo_menu_start;
-	select choix in "Config user environment - Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "All" "Exit"
+	select choix in "Create desktop shorcuts for Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "All" "Exit"
 	do 
 			
 	        case $REPLY in 
-	                1) config_bash_profile_lumerical ;; 
+	                1) create_shortcuts_lumerical ;; 
 	                2) check_klayout_exist ;; 
 	                3) install_SiEPIC ;;
-                    4)  config_bash_profile_lumerical
+                    4)  create_shortcuts_lumerical
                         check_klayout_exist
                         install_SiEPIC ;;
 	                5) echo "Happy PICing!"
