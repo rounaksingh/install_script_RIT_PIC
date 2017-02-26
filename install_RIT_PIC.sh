@@ -38,9 +38,14 @@ BASH_USER_ENV=.bashrc
 MODULE_LUMERICAL_MODE="lumerical-mode"
 MODULE_LUMERICAL_INTERCONNECT="lumerical-interconnect"
 MODULE_LUMERICAL_FDTD="lumerical-fdtd"
+MODULE_MATLAB="matlab"
 
-# shortcuts for lumerical
-# overwrite the siepic
+# icon picture file path
+ICON_LUMERICAL_MODE=""
+ICON_LUMERICAL_INTERCONNECT=""
+ICON_LUMERICAL_FDTD=""
+ICON_MATLAB=""
+
 #----------------------------------------------------------------------------------------------------------------------
 #
 
@@ -97,14 +102,14 @@ create_shortcuts_lumerical()
 {
 	echo "Creating shortcuts & file associations for Lumerical"
     # Desktop Shortcuts
-    create_shortcut "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect\""
-    create_shortcut "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions\""
-    create_shortcut "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions\""
+    create_shortcut "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect\"" "$ICON_LUMERICAL_INTERCONNECT"
+    create_shortcut "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions\"" "$ICON_LUMERICAL_MODE"
+    create_shortcut "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions\"" "$ICON_LUMERICAL_FDTD"
     # File associations
 
-    create_mime_app "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect %F\"" "" "icp"
-    create_mime_app "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions %F\"" "" "lms"
-    create_mime_app "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions %F\"" "" "fsp"
+    create_mime_app "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect %F\"" "$ICON_LUMERICAL_INTERCONNECT" "icp"
+    create_mime_app "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions %F\"" "$ICON_LUMERICAL_MODE" "lms"
+    create_mime_app "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions %F\"" "$ICON_LUMERICAL_FDTD" "fsp"
 
     # Update MIME
     update-mime-database ~/.local/share/mime
@@ -113,7 +118,23 @@ create_shortcuts_lumerical()
     echo "Done"
 }
 
-config_env_klayout() 
+create_shortcuts_matlab()
+{
+    echo "Creating shortcuts & file associations for Matlab"
+    # Desktop Shortcuts
+    create_shortcut "matlab" "bash -c \"source ~/.bashrc && module load $MODULE_MATLAB && matlab -desktop\"" "$ICON_MATLAB"
+
+    # File associations
+    create_mime_app "matlab" "bash -c \"source ~/.bashrc && module load $MODULE_MATLAB && matlab -desktop %F\"" "$ICON_MATLAB" "m"
+    
+    # Update MIME
+    update-mime-database ~/.local/share/mime
+    update-desktop-database ~/.local/share/applications
+
+    echo "Done"
+}
+
+config_env_klayout()
 {
     echo "Configuring user environment"
     echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> ~/$BASH_USER_ENV
@@ -219,22 +240,24 @@ echo_menu_start()
 home_menu() {
 	
 	echo_menu_start;
-	select choix in "Create desktop shorcuts for Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "All" "Exit"
+	select choix in "Create shorcuts for Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "Create shortcuts for Matlab" "All" "Exit"
 	do 
 			
 	        case $REPLY in 
 	                1) create_shortcuts_lumerical ;; 
 	                2) check_klayout_exist ;; 
 	                3) install_SiEPIC ;;
-                    4)  create_shortcuts_lumerical
+                    4) create_shortcuts_matlab;;
+                    5)  create_shortcuts_lumerical
                         check_klayout_exist
-                        install_SiEPIC ;;
-	                5) echo "Happy PICing!"
+                        install_SiEPIC
+                        create_shortcuts_matlab;;
+	                6) echo "Happy PICing!"
                         echo "Bye bye"
-						exit ;; 
+						exit ;;
 	                *) echo "~ unknown choice $REPLY" ;; 
 	        esac 
-	done 
+	done
 }
 
 home_menu
