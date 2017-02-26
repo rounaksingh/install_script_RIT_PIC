@@ -65,13 +65,13 @@ create_shortcut()
 create_shortcuts_lumerical()
 {
 	echo "Creating shortcuts for Lumerical"
-    create_shortcut "interconnect" "bash -c 'source ~/.bashrc && module load lumerical-interconnect && interconnect'"
-    create_shortcut "mode-solutions" "bash -c 'source ~/.bashrc && module load lumerical-mode && mode-solutions'"
-    create_shortcut "fdtd" "bash -c 'source ~/.bashrc && module load lumerical-fdtd && fdtd-solutions'"
+    create_shortcut "interconnect" "bash -c 'source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect'"
+    create_shortcut "mode-solutions" "bash -c 'source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions'"
+    create_shortcut "fdtd" "bash -c 'source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions'"
     echo "Done"
 }
 
-config_bash_profile_klayout() 
+config_env_klayout() 
 {
     echo "Configuring user environment"
     echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> ~/$BASH_USER_ENV
@@ -92,12 +92,14 @@ install_klayout()
         echo "Installing Klayout"
         unzip -oq $KLAYOUT_INSTALL_FILE
         echo "Installation complete"
-        config_bash_profile_klayout
+        config_env_klayout
     	#klayout -zz
     else
         echo "Klayout Installation file not found in home directory."
-        echo "Bye bye"
-    fi       
+        return 1
+    fi
+
+    return 0
 }
 
 # Check whether klayout exists
@@ -106,7 +108,14 @@ check_klayout_exist() {
         echo "Klayout Found"
     else
         install_klayout
+        if [ $? -ne 0 ]
+            then 
+                echo "Unable to Install Klayout." 
+                return 1
+        fi
     fi
+
+    return 0
 }
 
 extract_zip_file()
@@ -119,6 +128,13 @@ extract_zip_file()
 # Runs code for installation
 install_SiEPIC() 
 {
+	check_klayout_exist
+	if [ $? -ne 0 ]
+            then 
+                echo "Cannot install SiEPIC. No Klayout found" 
+                return 3
+    fi
+
     if [ -f "$SiEPIC_FILE" ]
     then
         # offline
