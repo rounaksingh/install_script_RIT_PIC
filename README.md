@@ -1,18 +1,18 @@
 # install_script_RIT_PIC
 A bash script for installing softwares(Klayout, SiEPIC & shortcuts for lumerical softwares) requires for mainly RIT Photonics Integrated circuits course. However, the script can be modified in many ways. Please feel free to do so.
 
+After configuring Lumerical, one can open project files by double clicking them. Moreover, Desktop shortcuts and Applications menu are created for Lumerical.
+
+Icons are not added. Since, it will require additional files.
+
 ## Platforms
 * Linux
-* Mac OSX (should work with prerequisites & some modification)
-* Windows 10 (supposed to work with new bash integation) (not tested)
 
 ## Prerequisites
 * unzip
 * wget (optional, not required for offline installation)
 
 For linux, both are already installed. 
-For Mac, you might have to install the wget & unzip using https://brew.sh/
-May work in Windows 10, because of new bash integration. Not tested
 
 ## How to run the script
 

@@ -62,12 +62,54 @@ create_shortcut()
     chmod 744 ~/Desktop/$SHORTCUT_NAME.desktop
 }
 
+create_mime_app()
+{
+    MIME_NAME=$1
+    MIME_CMD=$2
+    MIME_ICON=$3
+    MIME_FILE_EXT=$4
+
+    # Create .xml in mime
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>">~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    echo "<mime-info xmlns=\"http://www.freedesktop.org/standards/shared-mime-info\">">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    echo "<mime-type type=\"application/$MIME_FILE_EXT\">">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    echo "<comment>Lumerical $MIME_NAME file</comment>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    echo "<glob pattern=\"*.$MIME_FILE_EXT\"/>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    echo "</mime-type>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    echo "</mime-info>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+
+
+    # Create .desktop file in applications
+    echo "#!/usr/bin/env xdg-open">~/.local/share/applications/$MIME_NAME.desktop
+    echo "[Desktop Entry]">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "Version=1.0">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "Type=Application">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "Terminal=false">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "Exec=$MIME_CMD">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "Name=$MIME_NAME">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "Icon=$MIME_ICON">>~/.local/share/applications/$MIME_NAME.desktop
+    echo "MimeType=application/$MIME_FILE_EXT">>~/.local/share/applications/$MIME_NAME.desktop
+    
+
+}
+
 create_shortcuts_lumerical()
 {
-	echo "Creating shortcuts for Lumerical"
-    create_shortcut "interconnect" "bash -c 'source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect'"
-    create_shortcut "mode-solutions" "bash -c 'source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions'"
-    create_shortcut "fdtd" "bash -c 'source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions'"
+	echo "Creating shortcuts & file associations for Lumerical"
+    # Desktop Shortcuts
+    create_shortcut "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect\""
+    create_shortcut "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions\""
+    create_shortcut "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions\""
+    # File associations
+
+    create_mime_app "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect %F\"" "" "icp"
+    create_mime_app "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions %F\"" "" "lms"
+    create_mime_app "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions %F\"" "" "fsp"
+
+    # Update MIME
+    update-mime-database ~/.local/share/mime
+    update-desktop-database ~/.local/share/applications
+
     echo "Done"
 }
 
@@ -79,8 +121,8 @@ config_env_klayout()
     echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/$BASH_USER_ENV
     echo "export LD_LIBRARY_PATH" >> ~/$BASH_USER_ENV
     source ~/$BASH_USER_ENV
-    #create_shortcut "klayout" "bash -c 'PATH=\$PATH:\$HOME/klayout/usr/bin && export PATH && LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64 && export LD_LIBRARY_PATH && klayout'" "~/klayout/usr/share/pixmaps/klayout.png"
-    create_shortcut "klayout" "bash -c 'source ~/.bashrc && klayout'" "~/klayout/usr/share/pixmaps/klayout.png"
+    #create_shortcut "klayout" "bash -c \"PATH=\$PATH:\$HOME/klayout/usr/bin && export PATH && LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64 && export LD_LIBRARY_PATH && klayout\"" "~/klayout/usr/share/pixmaps/klayout.png"
+    create_shortcut "klayout" "bash -c \"source ~/.bashrc && klayout\"" "~/klayout/usr/share/pixmaps/klayout.png"
     echo "Configured"
 }
 
@@ -96,6 +138,7 @@ install_klayout()
     	#klayout -zz
     else
         echo "Klayout Installation file not found in home directory."
+        echo "Bye bye"
         return 1
     fi
 
