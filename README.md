@@ -1,7 +1,7 @@
 # install_script_RIT_PIC
 A bash script for installing softwares(Klayout, SiEPIC & shortcuts for lumerical softwares) requires for mainly RIT Photonics Integrated circuits course. However, the script can be modified in many ways. Please feel free to do so.
 
-After configuring Lumerical, one can open project files by double clicking them. Moreover, Desktop shortcuts and Applications menu are created for Lumerical.
+After configuring Lumerical, one can open project files by double clicking them. Moreover, Desktop shortcuts and Applications menu are created for Lumerical. Moreover, script .lsf files can be open from file broswer using "Open with" option and selecting specific lumerical program.
 
 Icons are not added. Since, it will require additional files.
 
