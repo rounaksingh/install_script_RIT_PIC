@@ -102,14 +102,14 @@ create_shortcuts_lumerical()
 {
 	echo "Creating shortcuts & file associations for Lumerical"
     # Desktop Shortcuts
-    create_shortcut "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect\"" "$ICON_LUMERICAL_INTERCONNECT"
-    create_shortcut "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions\"" "$ICON_LUMERICAL_MODE"
-    create_shortcut "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions\"" "$ICON_LUMERICAL_FDTD"
+    create_shortcut "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT $MODULE_MATLAB && interconnect\"" "$ICON_LUMERICAL_INTERCONNECT"
+    create_shortcut "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE $MODULE_MATLAB && mode-solutions\"" "$ICON_LUMERICAL_MODE"
+    create_shortcut "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD $MODULE_MATLAB && fdtd-solutions\"" "$ICON_LUMERICAL_FDTD"
     # File associations
 
-    create_mime_app "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT && interconnect %F\"" "$ICON_LUMERICAL_INTERCONNECT" "icp"
-    create_mime_app "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE && mode-solutions %F\"" "$ICON_LUMERICAL_MODE" "lms"
-    create_mime_app "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD && fdtd-solutions %F\"" "$ICON_LUMERICAL_FDTD" "fsp"
+    create_mime_app "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT $MODULE_MATLAB && interconnect %F\"" "$ICON_LUMERICAL_INTERCONNECT" "icp"
+    create_mime_app "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE $MODULE_MATLAB && mode-solutions %F\"" "$ICON_LUMERICAL_MODE" "lms"
+    create_mime_app "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD $MODULE_MATLAB && fdtd-solutions %F\"" "$ICON_LUMERICAL_FDTD" "fsp"
 
     # Update MIME
     update-mime-database ~/.local/share/mime
