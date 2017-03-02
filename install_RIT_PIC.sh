@@ -88,13 +88,13 @@ create_mime_app()
 
     # Create .xml in mime
     mkdir -p $MIME_DIR_PATH
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>">$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
-    echo "<mime-info xmlns=\"http://www.freedesktop.org/standards/shared-mime-info\">">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
-    echo "<mime-type type=\"application/$MIME_FILE_EXT\">">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
-    echo "<comment>Lumerical $MIME_NAME file</comment>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
-    echo "<glob pattern=\"*.$MIME_FILE_EXT\"/>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
-    echo "</mime-type>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
-    echo "</mime-info>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>">$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
+    echo "<mime-info xmlns=\"http://www.freedesktop.org/standards/shared-mime-info\">">>$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
+    echo "<mime-type type=\"application/x-$MIME_FILE_EXT\">">>$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
+    echo "<comment>Lumerical $MIME_NAME file</comment>">>$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
+    echo "<glob pattern=\"*.$MIME_FILE_EXT\"/>">>$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
+    echo "</mime-type>">>$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
+    echo "</mime-info>">>$MIME_DIR_PATH/application-x-$MIME_FILE_EXT.xml
 
 
     # Create .desktop file in applications
@@ -107,7 +107,7 @@ create_mime_app()
     echo "Exec=$MIME_CMD">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
     echo "Name=$MIME_NAME">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
     echo "Icon=$MIME_ICON">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
-    echo "MimeType=application/$MIME_FILE_EXT">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "MimeType=application/x-$MIME_FILE_EXT">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
     
 
 }
