@@ -42,12 +42,18 @@ MODULE_MATLAB="matlab"
 
 # icon picture file path
 ICON_LUMERICAL_MODE=""
-ICON_LUMERICAL_INTERCONNECT=""
+ICON_LUMERICAL_INTERCONNECT="$HOME/.local/share/icons/hicolor/48x48/apps/application-icp.png"
 ICON_LUMERICAL_FDTD=""
 ICON_MATLAB=""
 
 #----------------------------------------------------------------------------------------------------------------------
 #
+if [ -f /etc/redhat-release ] 
+    then
+    RED_HAT_VERSION=$(cat /etc/redhat-release | grep -oP '(?:(\d+)\.)' |grep -oP '\d')
+else
+    RED_HAT_VERSION="0"
+fi
 
 # shortcuts are created on desktop
 #create_shortcut
@@ -56,15 +62,19 @@ create_shortcut()
     SHORTCUT_NAME=$1
     SHORTCUT_CMD=$2
     SHORTCUT_ICON=$3
-    echo "#!/usr/bin/env xdg-open">~/Desktop/$SHORTCUT_NAME.desktop
-    echo "[Desktop Entry]">>~/Desktop/$SHORTCUT_NAME.desktop
-    echo "Version=1.0">>~/Desktop/$SHORTCUT_NAME.desktop
-    echo "Type=Application">>~/Desktop/$SHORTCUT_NAME.desktop
-    echo "Terminal=false">>~/Desktop/$SHORTCUT_NAME.desktop
-    echo "Exec=$SHORTCUT_CMD">>~/Desktop/$SHORTCUT_NAME.desktop
-    echo "Name=$SHORTCUT_NAME">>~/Desktop/$SHORTCUT_NAME.desktop
-    echo "Icon=$SHORTCUT_ICON">>~/Desktop/$SHORTCUT_NAME.desktop
-    chmod 744 ~/Desktop/$SHORTCUT_NAME.desktop
+    DIR_PATH="$HOME/Desktop/"
+    mkdir -p $DIR_PATH
+
+    echo "#!/usr/bin/env xdg-open">$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "[Desktop Entry]">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "Version=1.0">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "Type=Application">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "Terminal=false">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "Exec=$SHORTCUT_CMD">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "Name=$SHORTCUT_NAME">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    echo "Icon=$SHORTCUT_ICON">>$DIR_PATH/$SHORTCUT_NAME.desktop
+    
+    chmod 744 $DIR_PATH/$SHORTCUT_NAME.desktop
 }
 
 create_mime_app()
@@ -73,27 +83,31 @@ create_mime_app()
     MIME_CMD=$2
     MIME_ICON=$3
     MIME_FILE_EXT=$4
+    MIME_DIR_PATH="$HOME/.local/share/mime/packages"
+    MIME_APP_DIR_PATH="$HOME/.local/share/applications"
 
     # Create .xml in mime
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>">~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
-    echo "<mime-info xmlns=\"http://www.freedesktop.org/standards/shared-mime-info\">">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
-    echo "<mime-type type=\"application/$MIME_FILE_EXT\">">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
-    echo "<comment>Lumerical $MIME_NAME file</comment>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
-    echo "<glob pattern=\"*.$MIME_FILE_EXT\"/>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
-    echo "</mime-type>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
-    echo "</mime-info>">>~/.local/share/mime/packages/application-$MIME_FILE_EXT.xml
+    mkdir -p $MIME_DIR_PATH
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>">$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "<mime-info xmlns=\"http://www.freedesktop.org/standards/shared-mime-info\">">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "<mime-type type=\"application/$MIME_FILE_EXT\">">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "<comment>Lumerical $MIME_NAME file</comment>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "<glob pattern=\"*.$MIME_FILE_EXT\"/>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "</mime-type>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
+    echo "</mime-info>">>$MIME_DIR_PATH/application-$MIME_FILE_EXT.xml
 
 
     # Create .desktop file in applications
-    echo "#!/usr/bin/env xdg-open">~/.local/share/applications/$MIME_NAME.desktop
-    echo "[Desktop Entry]">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "Version=1.0">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "Type=Application">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "Terminal=false">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "Exec=$MIME_CMD">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "Name=$MIME_NAME">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "Icon=$MIME_ICON">>~/.local/share/applications/$MIME_NAME.desktop
-    echo "MimeType=application/$MIME_FILE_EXT">>~/.local/share/applications/$MIME_NAME.desktop
+    mkdir -p $MIME_APP_DIR_PATH
+    echo "#!/usr/bin/env xdg-open">$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "[Desktop Entry]">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "Version=1.0">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "Type=Application">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "Terminal=false">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "Exec=$MIME_CMD">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "Name=$MIME_NAME">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "Icon=$MIME_ICON">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
+    echo "MimeType=application/$MIME_FILE_EXT">>$MIME_APP_DIR_PATH/$MIME_NAME.desktop
     
 
 }
@@ -102,18 +116,17 @@ create_shortcuts_lumerical()
 {
 	echo "Creating shortcuts & file associations for Lumerical"
     # Desktop Shortcuts
-    create_shortcut "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT $MODULE_MATLAB && interconnect\"" "$ICON_LUMERICAL_INTERCONNECT"
-    create_shortcut "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE $MODULE_MATLAB && mode-solutions\"" "$ICON_LUMERICAL_MODE"
-    create_shortcut "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD $MODULE_MATLAB && fdtd-solutions\"" "$ICON_LUMERICAL_FDTD"
+    create_shortcut "interconnect" "bash -c \"source $HOME/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT $MODULE_MATLAB && interconnect\"" "$ICON_LUMERICAL_INTERCONNECT"
+    create_shortcut "mode-solutions" "bash -c \"source $HOME/.bashrc && module load $MODULE_LUMERICAL_MODE $MODULE_MATLAB && mode-solutions\"" "$ICON_LUMERICAL_MODE"
+    create_shortcut "fdtd-solutions" "bash -c \"source $HOME/.bashrc && module load $MODULE_LUMERICAL_FDTD $MODULE_MATLAB && fdtd-solutions\"" "$ICON_LUMERICAL_FDTD"
     # File associations
-
-    create_mime_app "interconnect" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT $MODULE_MATLAB && interconnect %F\"" "$ICON_LUMERICAL_INTERCONNECT" "icp"
-    create_mime_app "mode-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_MODE $MODULE_MATLAB && mode-solutions %F\"" "$ICON_LUMERICAL_MODE" "lms"
-    create_mime_app "fdtd-solutions" "bash -c \"source ~/.bashrc && module load $MODULE_LUMERICAL_FDTD $MODULE_MATLAB && fdtd-solutions %F\"" "$ICON_LUMERICAL_FDTD" "fsp"
+    create_mime_app "interconnect" "bash -c \"source $HOME/.bashrc && module load $MODULE_LUMERICAL_INTERCONNECT $MODULE_MATLAB && interconnect %F\"" "$ICON_LUMERICAL_INTERCONNECT" "icp"
+    create_mime_app "mode-solutions" "bash -c \"source $HOME/.bashrc && module load $MODULE_LUMERICAL_MODE $MODULE_MATLAB && mode-solutions %F\"" "$ICON_LUMERICAL_MODE" "lms"
+    create_mime_app "fdtd-solutions" "bash -c \"source $HOME/.bashrc && module load $MODULE_LUMERICAL_FDTD $MODULE_MATLAB && fdtd-solutions %F\"" "$ICON_LUMERICAL_FDTD" "fsp"
 
     # Update MIME
-    update-mime-database ~/.local/share/mime
-    update-desktop-database ~/.local/share/applications
+    update-mime-database $HOME/.local/share/mime
+    update-desktop-database $HOME/.local/share/applications
 
     echo "Done"
 }
@@ -122,14 +135,14 @@ create_shortcuts_matlab()
 {
     echo "Creating shortcuts & file associations for Matlab"
     # Desktop Shortcuts
-    create_shortcut "matlab" "bash -c \"source ~/.bashrc && module load $MODULE_MATLAB && matlab -desktop\"" "$ICON_MATLAB"
+    create_shortcut "matlab" "bash -c \"source $HOME/.bashrc && module load $MODULE_MATLAB && matlab -desktop\"" "$ICON_MATLAB"
 
     # File associations
-    create_mime_app "matlab" "bash -c \"source ~/.bashrc && module load $MODULE_MATLAB && matlab -desktop %F\"" "$ICON_MATLAB" "m"
+    create_mime_app "matlab" "bash -c \"source $HOME/.bashrc && module load $MODULE_MATLAB && matlab -desktop %F\"" "$ICON_MATLAB" "m"
     
     # Update MIME
-    update-mime-database ~/.local/share/mime
-    update-desktop-database ~/.local/share/applications
+    update-mime-database $HOME/.local/share/mime
+    update-desktop-database $HOME/.local/share/applications
 
     echo "Done"
 }
@@ -137,13 +150,13 @@ create_shortcuts_matlab()
 config_env_klayout()
 {
     echo "Configuring user environment"
-    echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> ~/$BASH_USER_ENV
-    echo "export PATH" >> ~/$BASH_USER_ENV
-    echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> ~/$BASH_USER_ENV
-    echo "export LD_LIBRARY_PATH" >> ~/$BASH_USER_ENV
-    source ~/$BASH_USER_ENV
-    #create_shortcut "klayout" "bash -c \"PATH=\$PATH:\$HOME/klayout/usr/bin && export PATH && LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64 && export LD_LIBRARY_PATH && klayout\"" "~/klayout/usr/share/pixmaps/klayout.png"
-    create_shortcut "klayout" "bash -c \"source ~/.bashrc && klayout\"" "~/klayout/usr/share/pixmaps/klayout.png"
+    echo "PATH=\$PATH:\$HOME/klayout/usr/bin" >> $HOME/$BASH_USER_ENV
+    echo "export PATH" >> $HOME/$BASH_USER_ENV
+    echo "LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64" >> $HOME/$BASH_USER_ENV
+    echo "export LD_LIBRARY_PATH" >> $HOME/$BASH_USER_ENV
+    source $HOME/$BASH_USER_ENV
+    #create_shortcut "klayout" "bash -c \"PATH=\$PATH:\$HOME/klayout/usr/bin && export PATH && LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HOME/klayout/usr/lib64 && export LD_LIBRARY_PATH && klayout\"" "$HOME/klayout/usr/share/pixmaps/klayout.png"
+    create_shortcut "klayout" "bash -c \"source $HOME/.bashrc && klayout\"" "$HOME/klayout/usr/share/pixmaps/klayout.png"
     echo "Configured"
 }
 
@@ -218,14 +231,34 @@ install_SiEPIC()
     fi
     
     echo "Installing SiEPIC_EBeam_PDK version: $SiEPIC_VERSION"
-    mkdir -p ~/.klayout
-    cp -r SiEPIC_EBeam_PDK-$SiEPIC_VERSION/klayout_dot_config/* ~/.klayout/
+    mkdir -p $HOME/.klayout
+    cp -r SiEPIC_EBeam_PDK-$SiEPIC_VERSION/klayout_dot_config/* $HOME/.klayout/
     if [ $? -ne 0 ]
         then 
             echo "Unable to Install SiEPIC." 
             return 2
     fi
     echo "Installation complete"            
+}
+
+config_nautilus_browser_mode()
+{
+    if [ $RED_HAT_VERSION -eq "0" ]
+        then
+        return
+    fi
+
+    echo "Configuring Nautilus - browser mode"
+
+    if [ $RED_HAT_VERSION -lt "7" ]
+        then
+        # New redhat versions have gconftools Refer: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Desktop_Migration_and_Administration_Guide/gsettings-dconf.html
+        gconftool-2 -t bool -s /apps/nautilus/preferences/always_use_browser true
+    else
+        # New redhat versions have dconftools
+        dconftool-2 -t bool -s /apps/nautilus/preferences/always_use_browser true
+    fi
+    echo "Done"
 }
 
 echo_menu_start()
@@ -240,7 +273,7 @@ echo_menu_start()
 home_menu() {
 	
 	echo_menu_start;
-	select choix in "Create shorcuts for Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "Create shortcuts for Matlab" "All" "Exit"
+	select choix in "Create shorcuts for Lumerical" "Install Klayout" "Install SiEPIC(require klayout)" "Create shortcuts for Matlab" "Configure Nautilus" "All" "Exit"
 	do 
 			
 	        case $REPLY in 
@@ -248,11 +281,13 @@ home_menu() {
 	                2) check_klayout_exist ;; 
 	                3) install_SiEPIC ;;
                     4) create_shortcuts_matlab;;
-                    5)  create_shortcuts_lumerical
+                    5) config_nautilus_browser_mode;;
+                    6) create_shortcuts_lumerical
                         check_klayout_exist
                         install_SiEPIC
-                        create_shortcuts_matlab;;
-	                6) echo "Happy PICing!"
+                        create_shortcuts_matlab
+                        config_nautilus_browser_mode;;
+	                7) echo "Happy PICing!"
                         echo "Bye bye"
 						exit ;;
 	                *) echo "~ unknown choice $REPLY" ;; 
